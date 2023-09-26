@@ -34,7 +34,7 @@ library(tidyverse)
 ### Task 2: Load data
 
 **Task** Load some [Maryland state government payments data](https://opendata.maryland.gov/Budget/State-of-Maryland-Payments-Data-FY2008-to-FY2024/7syw-q4cy) by running the following code. We'll use the guess_max() function as an argument to use the first 10 rows to set the data type. What does the first line of the red Warning message that prints out when you load the data say? What happens when you follow its instructions? Answer below. 
-**Answer**
+**Answer**The message alerts us to parsing issues and recommends we run a problem function to review the cause of the issue.
 
 ```{r}
 payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv", guess_max=10)
@@ -43,7 +43,7 @@ payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv
 ### Task 3: Reload data
 
 **Task** Run the following codeblock to reload the data, using every row to set the data types. Does it show any parsing errors when you run? Answer below 
-**Answer** No
+**Answer** No.
 
 ```{r}
 payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv", guess_max=373564)
@@ -66,7 +66,7 @@ The second smell we can find in code is **wrong spatial data**. Spatial data mea
 We can check to see if any of the zip codes are less than five characters by using [a function called `str_length`](https://stringr.tidyverse.org/reference/str_length.html) inside a filter.
 
 **Task** Run the following codeblock to group by the vendor's zip code and show any that are less than five characters in length. How many zip codes do not have five characters? What do you think explains those records? 
-**Answer**
+**Answer**549 zip codes to not have five characters. These could be zip codes that begin with 0 or are international zips (Canadian zips are 6 digits long, 3 characters followed by a space and 3 more characters.)
 
 ```{r}
 payments |>
@@ -265,7 +265,7 @@ cleaned_md_grants_loans
 ### Task 10: Answer our question!
 
 **Task** Write and run code to answer our original question: which zip code has gotten the most amount of money from the Maryland Tourism Board? Where is that zip code, and does that zip code make sense to you as the top recipient? Write a sentence describing the top result.
-**Answer** I can't figure this out...I have failed you.
+**Answer** The 21202 zip code belongs to Baltimore. It does make sense. As the state's largest city and top tourist destination, the Maryland Tourism Board priorities funding to Baltimore's downtown area. It has received over half a million dollars since 2009.
 
 Filter, group by, summarize
 filter - maryland tourism board
@@ -275,11 +275,10 @@ arrange desc
 
 
 ```{r}
-cleaned_md_grants_loans <- md_grants_loans |> 
-  filter(source == COMMERCE/MARYLAND TOURISM BOARD) |>
+cleaned_md_grants_loans |> 
+  filter(source == 'COMMERCE/MARYLAND TOURISM BOARD') |>
   group_by(zip5) |>
-  summarise(amount = sum(amount)) |>
-  arrange(desc(amount))
+  summarise(total_amount = sum(amount)) |>
+  arrange(desc(total_amount))
 
-cleaned_md_grants_loans
 ```
