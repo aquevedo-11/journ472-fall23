@@ -33,7 +33,8 @@ library(tidyverse)
 
 ### Task 2: Load data
 
-**Task** Load some [Maryland state government payments data](https://opendata.maryland.gov/Budget/State-of-Maryland-Payments-Data-FY2008-to-FY2024/7syw-q4cy) by running the following code. We'll use the guess_max() function as an argument to use the first 10 rows to set the data type. What does the first line of the red Warning message that prints out when you load the data say? What happens when you follow its instructions? Answer below. **Answer**
+**Task** Load some [Maryland state government payments data](https://opendata.maryland.gov/Budget/State-of-Maryland-Payments-Data-FY2008-to-FY2024/7syw-q4cy) by running the following code. We'll use the guess_max() function as an argument to use the first 10 rows to set the data type. What does the first line of the red Warning message that prints out when you load the data say? What happens when you follow its instructions? Answer below. 
+**Answer**
 
 ```{r}
 payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv", guess_max=10)
@@ -41,7 +42,8 @@ payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv
 
 ### Task 3: Reload data
 
-**Task** Run the following codeblock to reload the data, using every row to set the data types. Does it show any parsing errors when you run? Answer below **Answer**
+**Task** Run the following codeblock to reload the data, using every row to set the data types. Does it show any parsing errors when you run? Answer below 
+**Answer** No
 
 ```{r}
 payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv", guess_max=373564)
@@ -49,7 +51,7 @@ payments <- read_csv("data/State_of_Maryland_Payments_Data__FY2008_to_FY2024.csv
 
 ### Task 4: Examine the data with glimpse
 
-**Task** Run the following codeblock to glimpse the data. What data type is the "Vendor Name" field? What data type is the "Amount" field? What data type is the "Date" column? Answer below. **Answer**
+**Task** Run the following codeblock to glimpse the data. What data type is the "Vendor Name" field? What data type is the "Amount" field? What data type is the "Date" column? Answer below. **Answer** "Vendor Name" and "Date" are character data types. "Amount" is a numberical data type.
 
 ```{r}
 glimpse(payments)
@@ -68,8 +70,8 @@ We can check to see if any of the zip codes are less than five characters by usi
 
 ```{r}
 payments |>
+  filter(str_length(`Vendor Zip`) < 5) |>
   group_by(`Vendor Zip`) |>
-  filter(str_length(`Vendor Zip`) < 5) |> 
   summarise(
     count=n()
   ) |>
@@ -91,7 +93,7 @@ Each row represents a recipient of state grant or loan, along with information a
 ### Task 7: Looking at categories
 
 **Task** Run the following codeblock and describe below what each line is doing. Looking at the results, what jumps out at you as potentially problematic? 
-**Answer**
+**Answer** There are null results, categories other than "grant" or "loan" exist.
 
 ```{r}
 md_grants_loans |> 
@@ -105,7 +107,7 @@ Any time you are going to focus on a column for analysis, you should check for u
 ### Task 8: Find outliers
 
 **Task** Run the following code to arrange the grants & loan data so that the smallest amount is first. Describe what you see. 
-**Answer**
+**Answer** A grant of $60 was awarded to the Land Reservation Trust, Inc. by the Department of Natural Resources/Rural Legacy Program in 2009.
 
 ```{r}
 md_grants_loans |> 
@@ -142,7 +144,7 @@ Let's get cleaning. Our goal will be to build up one block of code that does all
 ### Task 3: Use clean_names()
 
 **Task** Run the following codeblock to use the `clean_names()` function from janitor to standardize column names. How does it change the headers? Answer below.
-**Answer**
+**Answer** Headers now have underscores between words in the column names rather than spaces.
 
 ```{r}
 # cleaning function
@@ -172,7 +174,7 @@ Right now the `source`, `grantee` and `description` columns have inconsistent ca
 ### Task 5: Using str_to_upper() to standardize case
 
 **Task** Run the following codeblock to use str_to_upper() to make the source, grantee and description columns upper-cased. Describe what each line is doing.
-**Answer** 
+**Answer** The first line tells R which database to use. The second and third line change the column named grantor to source. It then mutates the source, grantee and description column texts to all uppercase to create uniformity in the data.
 
 ```{r}
 # cleaning function
@@ -188,7 +190,7 @@ cleaned_md_grants_loans
 ### Task 6: Check for duplicate rows
 
 **Task** Run the following codeblock to check for duplicate rows using get_dupes(). How many duplicates are possible? 
-**Answer**
+**Answer** There are 50 possible duplicate results.
 
 ```{r}
 cleaned_md_grants_loans |>
@@ -198,7 +200,7 @@ cleaned_md_grants_loans |>
 ### Task 7: Get rid of duplicate rows
 
 **Task** Run the following codeblock to use distinct() to get rid of duplicate rows. How many rows does the new dataframe have? Answer below. 
-**Answer**
+**Answer** The new dataframe has 17,740 rows now as opposed to 17,765 rows in the original database.
 
 ```{r}
 # cleaning function
@@ -221,7 +223,7 @@ Let's start by cleaning up the zip field. Remember, some of the rows had a five-
 We're going to write code that tells R to make a new column for our zips, keeping the first five digits on the left, and get rid of anything after that by using `mutate()` in concert with `str_sub()`, from the `stringr` package.
 
 **Task** Run the following codeblock to use str_sub() to convert the ZIP codes that have nine digits to five digits, creating a new column. Look at the difference in the result - what changed? 
-**Answer**
+**Answer** Zip5 codes now only contain 5 digit zipcodes as opposed to the 4- and 9-digit codes in the original zip_code column.
 
 ```{r}
 # cleaning function
@@ -263,8 +265,21 @@ cleaned_md_grants_loans
 ### Task 10: Answer our question!
 
 **Task** Write and run code to answer our original question: which zip code has gotten the most amount of money from the Maryland Tourism Board? Where is that zip code, and does that zip code make sense to you as the top recipient? Write a sentence describing the top result.
-**Answer**
+**Answer** I can't figure this out...I have failed you.
+
+Filter, group by, summarize
+filter - maryland tourism board
+which zip code - zip5  - group by
+most amount of money - summarize sum
+arrange desc
+
 
 ```{r}
+cleaned_md_grants_loans <- md_grants_loans |> 
+  filter(source == COMMERCE/MARYLAND TOURISM BOARD) |>
+  group_by(zip5) |>
+  summarise(amount = sum(amount)) |>
+  arrange(desc(amount))
 
+cleaned_md_grants_loans
 ```
