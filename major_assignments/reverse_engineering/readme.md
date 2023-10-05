@@ -1,3 +1,3 @@
-# Reverse engineering project
+# Reverse engineering project data
 
-This folder is for reverse engineering project materials
+This folder is for reverse engineering project data
