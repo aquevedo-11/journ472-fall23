@@ -16,7 +16,9 @@ knitr::opts_chunk$set(echo = TRUE)
 options(scipen=999)
 
 # load your libraries
-
+library(tidyverse)
+library(janitor)
+library(lubridate)
 ```
 
 ## Getting Started
@@ -26,7 +28,14 @@ This week we'll be combining and joining data to make it more useful and to ask 
 *Before* you combine them you'll need to clean up some of the column names to make the data easier to work with - make sure you have loaded the library to do that. You also need to make sure that each column has the same name and datatype (you can check the datatypes using `glimpse`). If any of them does not, you need to fix that.
 
 ```{r}
+allegany_911 <- read_csv("data/allegany_911.csv") |> clean_names()
+carroll_911 <- read_csv("data/carroll_911.csv") |> clean_names()
+cecil_911 <- read_csv("data/cecil_911.csv") |> clean_names()
+#baltimore_911 <- read_csv("data/baltimore_911.csv")
+#maryland_zcta <- read_csv("data/maryland_zcta.csv")
 # load and combine the call data from those three counties
+ACC_911_combined <- bind_rows(list(allegany_911, carroll_911, cecil_911))
+View(ACC_911_combined)
 ```
 
 Then we'll join some demographic data with Baltimore City 911 calls and ask some questions of that. For that, you'll need to load the Baltimore City 911 data and the ZCTA demographic data from the data folder, and join them based on the zip code. Remember, the zip codes in both dataframes must be the same datatype (and should be characters). You should start with your Baltimore City 911 dataframe in creating your join.
