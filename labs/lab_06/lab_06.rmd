@@ -31,8 +31,7 @@ This week we'll be combining and joining data to make it more useful and to ask 
 allegany_911 <- read_csv("data/allegany_911.csv") |> clean_names()
 carroll_911 <- read_csv("data/carroll_911.csv") |> clean_names()
 cecil_911 <- read_csv("data/cecil_911.csv") |> clean_names()
-#baltimore_911 <- read_csv("data/baltimore_911.csv")
-#maryland_zcta <- read_csv("data/maryland_zcta.csv")
+
 # load and combine the call data from those three counties
 ACC_911_combined <- bind_rows(list(allegany_911, carroll_911, cecil_911))
 View(ACC_911_combined)
@@ -42,24 +41,42 @@ Then we'll join some demographic data with Baltimore City 911 calls and ask some
 
 ```{r}
 # load and join the Baltimore-related data
+baltimore_911 <- read_csv("data/baltimore_911.csv") |> clean_names()|> rename(zcta5n = zip_code)
+maryland_zcta <- read_csv("data/maryland_zcta.csv") |> clean_names() 
+
+baltimore_911 |> left_join(maryland_zcta, join_by("zcta5n")) |> nrow()
 ```
 
 ## Answer questions
 
 Q1. Let's start with our data from Allegany, Cecil and Carroll counties. Write code to generate a dataframe that shows the total number of calls for each county. What's the order of counties from most calls to least?
 
-A1.
+A1. In order from most to least 911 calls: Carroll County at 448 calls, Cecil County at 438 calls, Allegany County at 418 calls.
 
 ```{r}
+ACC_911_combined |>
+  group_by(county) |>
+  summarise(count_county = n()) |>
+  arrange(desc(count_county))
 ```
 
 Q2. In your combined dataframe that you used in A1, add a column for the month of each call, then write code to show the total number of calls per county and month. Are there any outliers or noteworthy results? Describe the general pattern of the results.
 
 Then calculate the most calls per county and location. Which location had the most calls - where and what is that location?
 
-A2.
+A2.The summer months tend to see an increase in number of 911 calls with each county reaching peak call volume in August. Each county seemed to have different times when call volumes were lowest - generally, Cecil and Allegany counties were lowest in December/January while Carroll was lowest in April.
+314 GROVE NECK RD EARLEVILLE, MD in Cecil County had the most calls (15 total). This is one of two Recovery Centers of America locations in Maryland.
 
 ```{r}
+ACC_911_combined_months <- ACC_911_combined |>
+  mutate(month = month(date, label = TRUE, abbr = FALSE)) |>
+  group_by(county, month) |>
+  summarise(total = n())
+
+ACC_911_combined_location <- ACC_911_combined |>
+  group_by(location, county) |>
+  summarise(total = n()) |>
+  arrange(desc(total))
 ```
 
 Q3. Let's turn to the Baltimore City data. You're interested in exploring calls in zip codes with a high percentage of children under 18. Write code to isolate calls in zip codes where the percentage of under 18 population is at least 75% and then show the zip code and population and how many calls occurred in each of those zip codes.
