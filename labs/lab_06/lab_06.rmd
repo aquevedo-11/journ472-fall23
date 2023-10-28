@@ -64,8 +64,8 @@ Q2. In your combined dataframe that you used in A1, add a column for the month o
 
 Then calculate the most calls per county and location. Which location had the most calls - where and what is that location?
 
-A2.The summer months tend to see an increase in number of 911 calls with each county reaching peak call volume in August. Each county seemed to have different times when call volumes were lowest - generally, Cecil and Allegany counties were lowest in December/January while Carroll was lowest in April.
-314 GROVE NECK RD EARLEVILLE, MD in Cecil County had the most calls (15 total). This is one of two Recovery Centers of America locations in Maryland.
+A2.The summer months tend to see an increase in number of OD-related 911 calls with each county reaching peak call volume in August. Each county seemed to have different times when call volumes were lowest - generally, Cecil and Allegany counties were lowest in December/January while Carroll was lowest in April.
+314 GROVE NECK RD EARLEVILLE, MD in Cecil County had the most calls (15 total). This is one of two Recovery Centers of America locations in Maryland...ironic.
 
 ```{r}
 ACC_911_combined_months <- ACC_911_combined |>
@@ -87,14 +87,40 @@ Add a column to your code that calculates the number of calls per 1,000 people f
 
 Which zip code has the highest rate of calls per 1,000 people? Find the neighborhoods in that zip code that are listed in the data - you can use group_by or distinct to do this. What are some of those neighborhoods, and what else can you tell me about the population there?
 
-A3.
+A3. The majority of the zip codes (21217, 21223, 21202, 21213, 21201, 21216) are located north and west of the downtown area. The outlier is 21205, which is located north of 1-40.
+The zip code 21217 had the highest rate of calls per 1k people (20.9 calls). The zip is associated with the Upton, Madison Park, Druid Heights, and Penn North neighborhoods. Based on the Maryland_zcta file, the area is predominately black (86.4%) with over 80% of residents under the age of 18 and a median age of 34. Over two-thirds of the population live in rented housing (70%).
+
 
 ```{r}
+baltimore_911 |> left_join(maryland_zcta, join_by("zcta5n"))
+baltimore_911_demos <- baltimore_911 |> left_join(maryland_zcta) |>
+  filter(pct_under_18 >= 75.0) |>
+  group_by(zcta5n) |>
+  summarise(total = n()) |>
+  arrange(desc(total))
+```
+
+```{r}
+baltimore_911_demos <- baltimore_911 |> left_join(maryland_zcta) |>
+  group_by(zcta5n, population) |>
+  summarise(total = n()) |>
+  mutate(calls_per_capita = (total / population) * 1000) |>
+  arrange(desc(calls_per_capita))
+  
 ```
 
 Q4. Choose your own adventure: I want you to come up with a question you could ask of the Baltimore City data that combines both the calls and the demographic information. You must use both demographics and the overdose call data in your work.
 
 A4:
+Q. What is the rate of calls per 1,000 people in zip codes where non-Hispanic whites account for over 75% of the population? Is there anything interesting in terms of where  those zips are located in comparison to the zip codes with the highest calls per 1,000 people?
+A. Non-Hispanic Whites account for at least 75% of the population in four zip codes. The highest call rate per 1,000 people in those zips is 6.5% and the lowest is 0.7%. 21211 (3.9% call rate) is on the opposite side of Druid Hill Park, where 21217 (Q3) is located.
 
 ```{r}
+baltimore_911 |> left_join(maryland_zcta, join_by("zcta5n"))
+baltimore_911_demos <- baltimore_911 |> left_join(maryland_zcta) |>
+  filter(pct_white_non_hispanic >= 75.0) |>
+  group_by(zcta5n, population) |>
+  summarise(total = n()) |>
+  mutate(calls_per_capita = (total / population) * 1000) |>
+  arrange(desc(calls_per_capita))
 ```
