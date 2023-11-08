@@ -146,7 +146,7 @@ PG_2020OD_zip_income <- prince_georges_2022OD_zip |>
 
 ggplot(data = PG_2020OD_zip_income, aes(x = median_income, y = total_calls)) +
   geom_text(aes(label = zipcode), size = 3, vjust = 0) +
-#  geom_point(shape = 19, color = "black", size = 2) +
+  geom_point(shape = 19, color = "black", size = 1) +
   labs(
     title = "Drug ODs More Likely in Households with Less Than $75k Income",
     x = "Median Income",
