@@ -1,9 +1,33 @@
 ---
 title: "Graduate Student Assignment - JOUR772 Fall 2023"
-author: "April Quevdo"
+author: "April Quevedo"
 date: "2023-12-04"
 output: html_document
 ---
+
+### Project Directives
+
+For this assignment, you will select one or more related datasets from Maryland's Open Data Portal.
+
+Your task is to provide a profile of that data, describing its scope and limitations, checking for issues of standardization and errors, and exploring it to find potential story ideas. Among the questions you should address are:
+
+**Dataset Questions** Who created and maintains the data? What state program or law is connected to it? What does each row represent? What is the chronological and geographic scope of this data? If this data contains aggregates (totals), can you find itemized data that those totals are derived from? Do the totals match your own calculations using the itemized data?
+
+You should explore the data to find at least 3 potential story ideas, and conduct enough analysis to describe the three best ideas you have in pitches. To do this, you should join it with one other source of information - that could be Census data or some other type of information that is related to the data you are working with.
+
+I want you to demonstrate multiple techniques you've learned in this class, including:
+
+**Dataset techniques** Generating summary data from itemized data using group_by and summarize. Cleaning up data as necessary. Describing in text the results of your work, your questions and potential story ideas. Visualizing data through at least two (2) charts and maps.
+
+You will do this exploration and analysis in an R Markdown notebook that you create and put in your major assignments folder. Your notebook should be free of errors and I should be able to run the code in it from start to finish. The data you use should be included in your repository unless it is more than 50MB in size, in which case you can place it in a separate location that you give me access to (for example, Google Drive).
+
+Your notebook should contain ample narrative of the decisions and choices you made in your work, including paths that didn't pan out. You should identify the most promising story ideas that your exploration has created and why they stand out, and you also should identify and describe questions that you may not have been able to answer but are worth exploring.
+
+This assignment will be worth the equivalent of three labs. It will be due on Dec. 4 (so you have approximately one month).
+
+### Background ###
+
+For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker and freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic in comparison to pre- and post-pandemic volumes. Additionally, I'd like to locate and analyze data of neighboring ports (Port of Wilmington, Port of Philadelphia, Port of Virginia, Port of New York/New Jersey).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -16,39 +40,3 @@ library(tidyverse)
 library(lubridate)
 library(janitor)
 ```
-
-For this assignment, you will select one or more related datasets from Maryland’s Open Data Portal. The only datasets you may not use are the following:
-
-Maryland Foreclosure Notice Data by Zip Code
-Maryland State Grant & Loan Data
-Maryland State Payments Data
-Maryland Power Outages - County
-Maryland Electric and Plug-in Hybrid Vehicle Registrations by County
-
-I’ll approve your selection, and will offer suggestions on expanding it if need be. The rule here is that you’ll need to work with sufficiently large data - thousands of records, not hundreds.
-
-Your task is to provide a profile of that data, describing its scope and limitations, checking for issues of standardization and errors, and exploring it to find potential story ideas. Among the questions you should address are:
-
-### Dataset Questions ###
-Who created and maintains the data? 
-What state program or law is connected to it? 
-What does each row represent? 
-What is the chronological and geographic scope of this data? 
-If this data contains aggregates (totals), can you find itemized data that those totals are derived from? 
-Do the totals match your own calculations using the itemized data?
-
-You should explore the data to find at least 3 potential story ideas, and conduct enough analysis to describe the three best ideas you have in pitches. To do this, you should join it with one other source of information - that could be Census data or some other type of information that is related to the data you are working with.
-
-I want you to demonstrate multiple techniques you’ve learned in this class, including:
-
-### Dataset techniques ###
-Generating summary data from itemized data using group_by and summarize.
-Cleaning up data as necessary.
-Describing in text the results of your work, your questions and potential story ideas.
-Visualizing data through at least two (2) charts and maps.
-
-You will do this exploration and analysis in an R Markdown notebook that you create and put in your major assignments folder. Your notebook should be free of errors and I should be able to run the code in it from start to finish. The data you use should be included in your repository unless it is more than 50MB in size, in which case you can place it in a separate location that you give me access to (for example, Google Drive).
-
-Your notebook should contain ample narrative of the decisions and choices you made in your work, including paths that didn’t pan out. You should identify the most promising story ideas that your exploration has created and why they stand out, and you also should identify and describe questions that you may not have been able to answer but are worth exploring.
-
-This assignment will be worth the equivalent of three labs. It will be due on Dec. 4 (so you have approximately one month).
