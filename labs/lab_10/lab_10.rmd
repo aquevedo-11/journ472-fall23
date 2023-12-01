@@ -90,7 +90,7 @@ county_centroids_df$county <- county_centroids$name
 
 ggplot() +
   geom_sf(data=county_outages_0323, aes(fill=rate)) +
-  geom_text(aes(x = X, y = Y, label = "county"), data = county_centroids_df, size = 3, check_overlap = TRUE) +
+  geom_text(aes(x = X, y = Y, label = county), data = county_centroids_df, size = 3, check_overlap = TRUE) +
   theme_minimal()
 
 ```
@@ -128,6 +128,6 @@ county_centroids_df$county <- county_centroids$name
 
 ggplot() +
   geom_sf(data=ev_cars_md, aes(fill=pct_change)) +
-  geom_text(aes(x = X, y = Y, label = "county"), data = county_centroids_df, size = 3, check_overlap = TRUE) +
+  geom_text(aes(x = X, y = Y, label = county), data = county_centroids_df, size = 3, check_overlap = TRUE) +
   theme_minimal()
 ```
