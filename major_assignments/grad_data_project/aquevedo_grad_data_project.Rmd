@@ -70,19 +70,11 @@ US_ports_data |>
 
 ## Analyzing the Port of New York/New Jersey
 
-The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, container terminals and warehousing, and an extensive rail network, the Port of NY/NJ i
-
-## Analyzing the Port of Virginia
-
-
-## Analyzing the Port of New York/New Jersey
-
 The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, container terminals and warehousing, and an extensive rail network, the Port of NY/NJ is equipped to handle large volumes of import and export freight. In 2022, it became the second busiest port in the country, surpassing the Port of Long Beach.
 
 ```{r}
 
 ```
-
 
 ## Analyzing the Port of Virginia
 
@@ -91,7 +83,6 @@ Description of situation in VA goes here.
 ```{r}
 
 ```
-
 
 ## Analyzing the Port of Baltimore
 
