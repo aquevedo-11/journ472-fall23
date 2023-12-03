@@ -9,15 +9,21 @@ output: html_document
 
 For this assignment, you will select one or more related datasets from Maryland's Open Data Portal.
 
-Your task is to provide a profile of that data, describing its scope and limitations, checking for issues of standardization and errors, and exploring it to find potential story ideas. Among the questions you should address are:
-
-**Dataset Questions** Who created and maintains the data? What state program or law is connected to it? What does each row represent? What is the chronological and geographic scope of this data? If this data contains aggregates (totals), can you find itemized data that those totals are derived from? Do the totals match your own calculations using the itemized data?
+Your task is to provide a profile of that data, describing its scope and limitations, checking for issues of standardization and errors, and exploring it to find potential story ideas.
 
 You should explore the data to find at least 3 potential story ideas, and conduct enough analysis to describe the three best ideas you have in pitches. To do this, you should join it with one other source of information - that could be Census data or some other type of information that is related to the data you are working with.
 
-I want you to demonstrate multiple techniques you've learned in this class, including:
+Among the questions you should address are:
 
-**Dataset techniques** Generating summary data from itemized data using group_by and summarize. Cleaning up data as necessary. Describing in text the results of your work, your questions and potential story ideas. Visualizing data through at least two (2) charts and maps.
+**Dataset Questions**
+
+Who created and maintains the data? What state program or law is connected to it? What does each row represent? What is the chronological and geographic scope of this data? If this data contains aggregates (totals), can you find itemized data that those totals are derived from? Do the totals match your own calculations using the itemized data?
+
+**Datset Question Answers**
+
+The primary dataset for this project, Maryland Port Administration General Cargo, was created and is maintained by the Maryland Department of Transportation (MDOT)'s Maryland Port Administration. The data is updated monthly and contains data from the past 25 years (1998 to 2023). Each row represents the monthly amount of cargo volumes received in a category (according to column title). All information pertains to inbound and outbound cargo freight handled by the Port of Baltimore located in Baltimore, MD. Itemized data is not immediately available.
+
+**Dataset techniques** I want you to demonstrate multiple techniques you've learned in this class, including: Generating summary data from itemized data using group_by and summarize. Cleaning up data as necessary. Describing in text the results of your work, your questions and potential story ideas. Visualizing data through at least two (2) charts and maps.
 
 You will do this exploration and analysis in an R Markdown notebook that you create and put in your major assignments folder. Your notebook should be free of errors and I should be able to run the code in it from start to finish. The data you use should be included in your repository unless it is more than 50MB in size, in which case you can place it in a separate location that you give me access to (for example, Google Drive).
 
@@ -25,9 +31,9 @@ Your notebook should contain ample narrative of the decisions and choices you ma
 
 This assignment will be worth the equivalent of three labs. It will be due on Dec. 4 (so you have approximately one month).
 
-### Background ###
+### Background
 
-For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker and freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic in comparison to pre- and post-pandemic volumes. Additionally, I'd like to locate and analyze data of neighboring ports (Port of Wilmington, Port of Philadelphia, Port of Virginia, Port of New York/New Jersey).
+For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker while also freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic in comparison to pre- and post-pandemic volumes. Additionally, I'd like to locate and analyze data of neighboring ports (Port of Wilmington, Port of Philadelphia, Port of Virginia, Port of New York/New Jersey).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -39,4 +45,60 @@ options(scipen=999)
 library(tidyverse)
 library(lubridate)
 library(janitor)
+```
+
+```{r}
+port_of_bmore <- read_csv("data/baltimore_port_cargo_1998_2023.csv") |> clean_names()
+port_of_nynj <- read_csv("data/Port_Authority_of_NY_NJ_Loaded_Containers_Monthly_Imports_and_Exports_Beginning_2000.csv") |> clean_names()
+port_of_va <- read_csv("data/port_of_virginia_statistics.xlsx") |> clean_names()
+US_ports_data <- read_csv("data/US_Port_Data_Export.csv") |> clean_names()
+```
+
+## Establishing baseline
+
+To make sure I'm analyzing the data in each port file correctly, I located a file from the USDOT's file available on data.gov. The most complete year was 2019 (right before the pandemic). Below is code for the numbers reported for export
+
+```{r}
+ports = c("New York, NY & NJ", "Baltimore, MD", "Virginia, VA, Port of")
+
+US_ports_data |>
+  filter(port_name == ports) |>
+  filter(reporting_year == 2019) |>
+ # filter(trade_type == "IMPORTS") |>
+  select(cargo_type, port_name, reporting_year, trade_type, units, volume)
+
+
+```
+
+## Analyzing the Port of New York/New Jersey
+
+The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, container terminals and warehousing, and an extensive rail network, the Port of NY/NJ is equipped to handle large volumes of import and export freight. In 2022, it became the second busiest port in the country, surpassing the Port of Long Beach.
+
+```{r}
+
+
+```
+
+## Analyzing the Port of Virginia
+
+Description of situation in VA goes here.
+
+```{r}
+
+```
+
+## Analyzing the Port of Baltimore
+
+Description of situation in Balty goes here.
+
+```{r}
+port_of_bmore <- port_of_bmore |>
+  mutate(month = my(month)) |>
+  rename(date = month) |>
+  mutate(year = format(as.Date(date), "%Y")) |>
+  select(year, total_general_cargo_tons, import_loaded_te_us, export_loaded_te_us, total_loaded_te_us)
+```
+
+```{r}
+
 ```
