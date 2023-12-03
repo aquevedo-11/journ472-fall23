@@ -33,7 +33,7 @@ This assignment will be worth the equivalent of three labs. It will be due on De
 
 ### Background
 
-For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker while also freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic (2020-2021) in comparison to pre-pandemic (2019) and post-pandemic (2022) volumes. Additionally, I'd like to locate and analyze data of neighboring ports (Port of Wilmington, Port of Philadelphia, Port of Virginia, Port of New York/New Jersey).
+For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker while also freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic (2020-2021) in comparison to pre-pandemic (2019) and post-pandemic (2022) volumes. Additionally, I'd like to locate and analyze data of the two largest neighboring ports (Port of Virginia and Port of New York/New Jersey).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -59,18 +59,19 @@ US_ports_data <- read_csv("data/US_Port_Data_Export.csv") |> clean_names()
 To make sure I'm analyzing the data in each port file correctly, I located a file from the USDOT's data available on data.gov. The most complete year was 2019 (right before the pandemic). Below is code for the numbers reported to the USDOT.
 
 ```{r}
-US_ports_data |>
-  filter(port_name == "New York, NY & NJ" | port_name == "Baltimore, MD" | port_name == "Virginia, VA, Port of") |>
+US_ports_data_big_3 <- US_ports_data |>
+  filter(clean_port_name == "NY-NJ" | clean_port_name == "Baltimore" | clean_port_name == "Virginia") |>
   filter(reporting_year == 2019) |>
   filter(units == "Container TEUs") |>
   filter(trade_type == "IMPORTS"| trade_type == "EXPORTS") |>
-  select(port_name, reporting_year, trade_type, units, volume)
+  select(clean_port_name, reporting_year, units, volume)
 
 ```
 
+
 ## Analyzing the Port of New York/New Jersey
 
-The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, container terminals and warehousing, and an extensive rail network, the Port of NY/NJ is equipped to handle large volumes of import and export freight. In 2022, it became the second busiest port in the country, surpassing the Port of Long Beach.
+The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, terminals/warehouses, and an extensive rail network, the Port of NY/NJ is best equipped to handle large volumes of import and export freight. In 2022, it became the second busiest port in the country, surpassing the Port of Long Beach.
 
 ```{r}
 
@@ -89,9 +90,10 @@ Description of situation in VA goes here.
 Description of situation in Balty goes here.
 
 ```{r}
-port_of_bmore <- port_of_bmore |>
+new_port_of_baltimore <- port_of_bmore |>
   mutate(month = my(month)) |>
   rename(date = month) |>
   mutate(year = format(as.Date(date), "%Y")) |>
-  select(year, total_general_cargo_tons, import_loaded_te_us, export_loaded_te_us, total_loaded_te_us)
+  select(year, import_loaded_te_us, export_loaded_te_us)
 ```
+
