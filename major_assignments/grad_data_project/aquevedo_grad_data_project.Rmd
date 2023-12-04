@@ -161,6 +161,14 @@ port_of_bmore_gg |>
 
 Analysis goes here
 
+**Potential Story Ideas**
+
+Ideas go here
+
+**Known Errors in Data**
+
+Examples
+
 ```{r}
 final_3_gg <- inner_join(port_of_bmore_gg, port_of_nynj_gg, by = "year") %>%
           inner_join(port_of_va_gg, by = "year") |>
