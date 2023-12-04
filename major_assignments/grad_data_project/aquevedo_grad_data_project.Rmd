@@ -71,7 +71,7 @@ US_ports_data_big_3 |>
   ggplot() +
   geom_bar(aes(x=clean_port_name, weight=volume)) +
   labs(
-    title="Annual Port TEU Volumes",
+    title="Annual Atlantic Coast Ports TEU Volumes",
     x = "Port",
     y = "Total TEUs",
     caption = "source: USDOT")
