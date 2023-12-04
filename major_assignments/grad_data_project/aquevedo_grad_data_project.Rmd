@@ -78,7 +78,6 @@ US_ports_data_big_3 |>
 
 ```
 
-
 ## Analyzing the Port of New York/New Jersey
 
 The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, terminals/warehouses, and an extensive rail network, the Port of NY/NJ is best equipped to handle large volumes of import and export freight. In 2022, it became the second busiest port in the country, surpassing the Port of Long Beach.
@@ -111,6 +110,15 @@ port_of_va_gg <- port_of_va |> rename(count_type = x1) |> rename(load_type = x2)
   select(count_type, load_type, x2019, x2020, x2021, x2022) |>
   filter(count_type == "Total") |> filter(load_type == "Total TEUs") 
 
+#port_of_nynj_gg |>
+#  ggplot() +
+#  geom_bar(aes(x=clean_port_name, weight=volume)) +
+#  labs(
+#    title="Annual Port TEU Volumes",
+#    x = "Port",
+#    y = "Total TEUs",
+#    caption = "source: USDOT")
+
 ```
 
 ## Analyzing the Port of Baltimore
@@ -131,10 +139,9 @@ port_of_bmore_gg |>
   ggplot() +
   geom_bar(aes(x=year, weight=sum_year)) +
   labs(
-    title="Annual Port of Baltimore TEU Volumes",
+    title="Annual Port of Baltimore TEU Volumes 2019-2022",
     x = "Year",
     y = "Total TEUs",
     caption = "source: Maryland Port Administration")
 
 ```
-
