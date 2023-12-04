@@ -35,6 +35,8 @@ This assignment will be worth the equivalent of three labs. It will be due on De
 
 For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker while also freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic (2020-2021) in comparison to pre-pandemic (2018-2019) and post-pandemic (2022) volumes. Additionally, I'd like to locate and analyze data of the two largest neighboring ports (Port of Virginia and Port of New York/New Jersey).
 
+The unit of measurement used in my analysis is TEU (twenty-foot equivalent unit). This is a widely-accepted/standard measurement used in the logistics industry. The unit represents space/volume occupied by a 20 foot cargo container. It has dimensions of approximately 20"L x 8"W x 8.5"H.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # Turn off scientific notation
@@ -82,10 +84,13 @@ US_ports_data_big_3 |>
 
 The port of New York/New Jersey is the busiest of all ports located along the Atlantic Coast. With multiple airports, terminals/warehouses, and an extensive rail network, the Port of NY/NJ is best equipped to handle large volumes of import and export freight. In 2022, it became the second busiest port in the country, surpassing the Port of Long Beach.
 
-Note: The original dataset I downloaded from the Port of NY/NJ's site contained freight volumes from 2000-2015. I know scraping from a site is possible but decided to manually create the set analyzed for years 2019-2022 in order to save some time.
+Note: The original dataset I downloaded from the Port of NY/NJ's site contained freight volumes from 2000-2015. I know scraping from a site is possible but decided to manually create the set analyzed for years 2019-2022 in order to save some time. A friend of mine tried to scrape and said there was some difficulty (info being hidden, "They may have just commented stuff out with a script line ----\>"). There was a workaround but it would've taken some time. I think he threw in the towel after 2 hours.
 
 ```{r}
-port_of_nynj_gg <- port_of_nynj |>
+new_port_of_nynj <- port_of_nynj |>
+  rename(`2018` = x2018) |> rename(`2019` = x2019) |> rename(`2020` = x2020) |> rename(`2021` = x2021) |> rename(`2022` = x2022)
+
+port_of_nynj_gg <- new_port_of_nynj |>
   filter(category == "Total TEUs") |> 
   pivot_longer(cols = -category, names_to = "year", values_to = "value")
 #  pivot_longer(cols=c'Total TEUs', 'Category', names_to='Category', values_to = "Total TEUs")
@@ -94,7 +99,7 @@ port_of_nynj_gg |>
   ggplot() +
   geom_bar(aes(x=year, weight=value)) +
   labs(
-    title="Annual Port of New York-New Jersey TEU Volumes 2019-2022",
+    title="Annual Port of New York-New Jersey TEU Volumes 2018-2022",
     x = "Year",
     y = "Total TEUs",
     caption = "source: Port Authority of New York and New Jersey")
@@ -103,14 +108,16 @@ port_of_nynj_gg |>
 
 ## Analyzing the Port of Virginia
 
-Description of situation in VA goes here.
+Similar to the Port of NY/NJ, the Port of Virginia saw a decline in TEUs at the beginning of the pandemic (2020) followed by a sharp rise in freight volumes in 2021. Unlike NY/NJ and Baltimore, however, the volume declined again as the country and industry began to return to pre-pandemic norms.
 
 Note: The original dataset downloaded from the Port of Virginia's site was a .xlsx format. I converted to .csv and reloaded.
 
 ```{r}
-port_of_va_gg <- port_of_va |> rename(count_type = x1) |> rename(load_type = x2) |>
-  select(count_type, load_type, x2018, x2019, x2020, x2021, x2022) |>
-  filter(count_type == "Total") |> filter(load_type == "Total TEUs")  |>
+new_port_of_va <- port_of_va |> rename(count_type = x1) |> rename(load_type = x2) |> rename(`2018` = x2018) |> rename(`2019` = x2019) |> rename(`2020` = x2020) |> rename(`2021` = x2021) |> rename(`2022` = x2022)
+
+port_of_va_gg <- new_port_of_va |> 
+  select(count_type, load_type, `2018`, `2019`, `2020`, `2021`, `2022`) |>
+  filter(count_type == "Total") |> filter(load_type == "Total TEUs") |>
   #pivot_longer(cols = -count_type, names_to = "year", values_to = "value")
   pivot_longer(cols = -c(count_type, load_type), names_to = "year", values_to = "value")
 
@@ -127,7 +134,7 @@ port_of_va_gg |>
 
 ## Analyzing the Port of Baltimore
 
-Description of situation in Balty goes here.
+The Port of Baltimore did not see a surge in volume similar to ports in Virginia and New York/New Jersey (reasons unclear) during the pandemic. Of the projected volume, they actually saw a decline as sailing orders for inbound ships were cancelled due to lack of goods available in origin countries like China. Based on the analysis below and articles published post-pandemic, the Port of Baltimore continues to rebound from a pandemic low in 2020. 2022 was its busiest year with nearly 780 thousand TEUs.
 
 ```{r}
 port_of_bmore_gg <- port_of_bmore |>
@@ -137,15 +144,36 @@ port_of_bmore_gg <- port_of_bmore |>
   select(year, total_loaded_te_us) |>
   filter(year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022") |>
   group_by(year) |>
-  summarise(sum_year = sum(total_loaded_te_us))
+  summarise(value = sum(total_loaded_te_us))
 
 port_of_bmore_gg |>
   ggplot() +
-  geom_bar(aes(x=year, weight=sum_year)) +
+  geom_bar(aes(x=year, weight=value)) +
   labs(
     title="Annual Port of Baltimore TEU Volumes 2019-2022",
     x = "Year",
     y = "Total TEUs",
     caption = "source: Maryland Port Administration")
 
+```
+
+## Port Volume Comparisons
+
+Analysis goes here
+
+```{r}
+final_3_gg <- inner_join(port_of_bmore_gg, port_of_nynj_gg, by = "year") %>%
+          inner_join(port_of_va_gg, by = "year") |>
+
+
+  #ggplot(big_3_gg) +
+  #geom_point(aes(x = Year, y = `Port of VA`, color = "Port of VA")) +
+  #geom_point(aes(x = Year, y = `Port of NY-NJ`, color = "Port of NY-NJ")) +
+  #geom_point(aes(x = Year, y = `Port of Baltimore`, color = "Port of Baltimore")) +
+  #labs(title = "Atlantic Coast Volumes",
+   #    x = "Year",
+    #   y = "Port") +
+  #scale_x_continuous(breaks = seq (2018, 2022, by = 1)) +
+  #scale_color_manual(values = c("Port of VA" = "blue", "Port of NY-NJ" = "yellow", "Port of Baltimore" = "orange")) +
+  #theme_minimal()
 ```
