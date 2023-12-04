@@ -102,7 +102,7 @@ port_of_nynj_gg |>
     title="Annual Port of New York-New Jersey TEU Volumes 2018-2022",
     x = "Year",
     y = "Total TEUs",
-    caption = "source: Port Authority of New York and New Jersey")
+    caption = "Source: Port Authority of New York and New Jersey")
 
 ```
 
@@ -128,7 +128,7 @@ port_of_va_gg |>
     title="Annual Port of Virginia TEU Volumes 2019-2022",
     x = "Year",
     y = "Total TEUs",
-    caption = "source: Port of Virginia")
+    caption = "Source: Port of Virginia")
 
 ```
 
@@ -153,21 +153,13 @@ port_of_bmore_gg |>
     title="Annual Port of Baltimore TEU Volumes 2019-2022",
     x = "Year",
     y = "Total TEUs",
-    caption = "source: Maryland Port Administration")
+    caption = "Source: Maryland Port Administration")
 
 ```
 
 ## Port Volume Comparisons
 
-Analysis goes here
-
-## Potential Story Ideas
-
-Ideas go here
-
-**Known Errors in Data**
-
-Examples
+Overall, Atlantic Coast ports saw a spike in imported and exported TEUs in 2021, likely partially as a result of Pacific Coast ports being overwhelmed as previously discussed and partially due to an increase in demand/consumerism. However, the volume declined in 2022 as the pandemic came to an unofficial end, driven mostly by the Port of Virginia. The Port of NY-NJ saw the sharpest pandemic-driven volume increase and was able to maintain the elevated volume. The Port of Baltimore's volume remained essentially flat but has been gradually increasing since the initial pandemic drop in 2020.
 
 ```{r}
 final_3_gg <- inner_join(port_of_bmore_gg, port_of_nynj_gg, by = "year") %>%
@@ -181,16 +173,29 @@ restructured_final_3 <- final_3_gg |>
 
 ggplot() +
   geom_bar(data=restructured_final_3, aes(x = year, weight=value, fill = port)) +
-  coord_flip()
-  geom_line(aes(x = year, y = VA, color = "Virginia")) +
-  geom_line(aes(x = year, y = NY_NJ, color = "NY_NJ")) +
-  geom_line(aes(x = year, y = Baltimore, color = "Baltimore")) +
   labs(title = "Port Volumes Over Years",
-       x = "year",
-       y = "value") +
-  scale_x_continuous(breaks = seq(2018, 2022, by = 1)) +
-  scale_color_manual(name = "port", values = c("Virginia" = "blue", "NY_NJ" = "yellow", "Baltimore" = "orange")) +
-  theme_minimal()
-
+       x = "Year",
+       y = "Totals",
+       caption = "Source USDOT, NY-NJ Port Authority, Maryland Port Authority")
+  
+  #coord_flip() 
+  #geom_line(aes(x = year, y = VA, color = "Virginia")) +
+  #geom_line(aes(x = year, y = NY_NJ, color = "NY_NJ")) +
+  #geom_line(aes(x = year, y = Baltimore, color = "Baltimore")) +
+  #labs(title = "Port Volumes Over Years",
+  #     x = "year",
+  #     y = "value") +
+  #scale_x_continuous(breaks = seq(2018, 2022, by = 1)) +
+  #scale_color_manual(name = "port", values = c("Virginia" = "blue", "NY_NJ" = "yellow", "Baltimore" = "orange")) +
+  #theme_minimal()
 
 ```
+
+## Potential Story Ideas
+
+Would require additional analysis, but I'd be curious to see what the general volume pattern at the Port of Baltimore has been - have we ever seen steep inclines/declines in port activity? Why is their volume such a small fraction of other ports in the area?  With their freight volumes mostly flat while other east coast volumes increased during the pandemic, I also wonder what was the main driver in their exception to the pandemic trend.
+Non-MD related - I'm interested in what infrastructure is being/has been put in place at NY-NJ now that they are seeing a sustained increase in ocean freight (new container warehouses, increase in personel, etc).
+
+**Known Errors in Data**
+
+The TEU numbers reported by the USDOT (my baseline) did not match the numbers recevied by individual port authorities. I did some digging and initially believed certain totals included empty containers rather than just loaded import/export containers; however, after manually subtracting empty container numbers, they still did not match but were close enough.
