@@ -33,7 +33,7 @@ This assignment will be worth the equivalent of three labs. It will be due on De
 
 ### Background
 
-For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker while also freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic (2020-2021) in comparison to pre-pandemic (2019) and post-pandemic (2022) volumes. Additionally, I'd like to locate and analyze data of the two largest neighboring ports (Port of Virginia and Port of New York/New Jersey).
+For my project, I'd like to explore the Maryland Port Administration's monthly general cargo data. Most imports to the U.S. come through western ports - the largest being the Port of Los Angeles. West coast ports were overwhelmed during the pandemic, resulting in a shortage of available containers as well as cargo ships. The Port of Baltimore does not see the same volume as Los Angeles, nor is it a top five port on the east coast. However, with west coast ports being overwhelmed during the pandemic, transportation companies often rerouted ships to other ports in hopes of getting freight to their final destination quicker while also freeing up equipment. Using the linked dataset, I'd like to analyze total volumes entering the Port of Baltimore throughout the pandemic (2020-2021) in comparison to pre-pandemic (2018-2019) and post-pandemic (2022) volumes. Additionally, I'd like to locate and analyze data of the two largest neighboring ports (Port of Virginia and Port of New York/New Jersey).
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -50,7 +50,7 @@ library(ggplot2)
 
 ```{r}
 port_of_bmore <- read_csv("data/baltimore_port_cargo_1998_2023.csv") |> clean_names()
-port_of_nynj <- read_csv("data/port_of_nynj_2019_2022.csv") |> clean_names()
+port_of_nynj <- read_csv("data/port_of_nynj_2018_2022.csv") |> clean_names()
 port_of_va <- read_csv("data/port_of_virginia_statistics_TEU.csv") |> clean_names()
 US_ports_data <- read_csv("data/US_Port_Data_Export.csv") |> clean_names()
 ```
@@ -71,7 +71,7 @@ US_ports_data_big_3 |>
   ggplot() +
   geom_bar(aes(x=clean_port_name, weight=volume)) +
   labs(
-    title="Annual Atlantic Coast Ports TEU Volumes",
+    title="Atlantic Coast Ports TEU Volumes in 2019",
     x = "Port",
     y = "Total TEUs",
     caption = "source: USDOT")
@@ -86,16 +86,18 @@ Note: The original dataset I downloaded from the Port of NY/NJ's site contained 
 
 ```{r}
 port_of_nynj_gg <- port_of_nynj |>
-  filter(category == "Total TEUs") |>
+  filter(category == "Total TEUs") |> 
+  pivot_longer(cols = -category, names_to = "year", values_to = "value")
+#  pivot_longer(cols=c'Total TEUs', 'Category', names_to='Category', values_to = "Total TEUs")
 
-#port_of_nynj_gg |>
-#  ggplot() +
-#  geom_bar(aes(x=clean_port_name, weight=volume)) +
-#  labs(
-#    title="Annual Port of New York-New Jersey TEU Volumes 2019-2022",
-#    x = "Port",
-#    y = "Total TEUs",
-#    caption = "source: USDOT")
+port_of_nynj_gg |>
+  ggplot() +
+  geom_bar(aes(x=year, weight=value)) +
+  labs(
+    title="Annual Port of New York-New Jersey TEU Volumes 2019-2022",
+    x = "Year",
+    y = "Total TEUs",
+    caption = "source: Port Authority of New York and New Jersey")
 
 ```
 
@@ -107,17 +109,19 @@ Note: The original dataset downloaded from the Port of Virginia's site was a .xl
 
 ```{r}
 port_of_va_gg <- port_of_va |> rename(count_type = x1) |> rename(load_type = x2) |>
-  select(count_type, load_type, x2019, x2020, x2021, x2022) |>
-  filter(count_type == "Total") |> filter(load_type == "Total TEUs") 
+  select(count_type, load_type, x2018, x2019, x2020, x2021, x2022) |>
+  filter(count_type == "Total") |> filter(load_type == "Total TEUs")  |>
+  #pivot_longer(cols = -count_type, names_to = "year", values_to = "value")
+  pivot_longer(cols = -c(count_type, load_type), names_to = "year", values_to = "value")
 
-#port_of_nynj_gg |>
-#  ggplot() +
-#  geom_bar(aes(x=clean_port_name, weight=volume)) +
-#  labs(
-#    title="Annual Port of Virginia TEU Volumes 2019-2022",
-#    x = "Port",
-#    y = "Total TEUs",
-#    caption = "source: USDOT")
+port_of_va_gg |>
+  ggplot() +
+  geom_bar(aes(x=year, weight=value)) +
+  labs(
+    title="Annual Port of Virginia TEU Volumes 2019-2022",
+    x = "Year",
+    y = "Total TEUs",
+    caption = "source: Port of Virginia")
 
 ```
 
@@ -131,7 +135,7 @@ port_of_bmore_gg <- port_of_bmore |>
   rename(date = month) |>
   mutate(year = format(as.Date(date), "%Y")) |>
   select(year, total_loaded_te_us) |>
-  filter(year == "2019" | year == "2020" | year == "2021" | year == "2022") |>
+  filter(year == "2018" | year == "2019" | year == "2020" | year == "2021" | year == "2022") |>
   group_by(year) |>
   summarise(sum_year = sum(total_loaded_te_us))
 
