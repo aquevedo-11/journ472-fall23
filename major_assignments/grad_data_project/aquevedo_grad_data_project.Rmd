@@ -193,9 +193,8 @@ ggplot() +
 
 ## Potential Story Ideas
 
-Would require additional analysis, but I'd be curious to see what the general volume pattern at the Port of Baltimore has been - have we ever seen steep inclines/declines in port activity? Why is their volume such a small fraction of other ports in the area?  With their freight volumes mostly flat while other east coast volumes increased during the pandemic, I also wonder what was the main driver in their exception to the pandemic trend.
-Non-MD related - I'm interested in what infrastructure is being/has been put in place at NY-NJ now that they are seeing a sustained increase in ocean freight (new container warehouses, increase in personel, etc).
+Would require additional analysis, but I'd be curious to see what the general volume pattern at the Port of Baltimore has been - have we ever seen steep inclines/declines in port activity? Why is their volume such a small fraction of other ports in the area? With their freight volumes mostly flat while other east coast volumes increased during the pandemic, I also wonder what was the main driver in their exception to the pandemic trend. Non-MD related - I'm interested in what infrastructure is being/has been put in place at NY-NJ now that they are seeing a sustained increase in ocean freight (new container warehouses, increase in personnel, etc).
 
 **Known Errors in Data**
 
-The TEU numbers reported by the USDOT (my baseline) did not match the numbers recevied by individual port authorities. I did some digging and initially believed certain totals included empty containers rather than just loaded import/export containers; however, after manually subtracting empty container numbers, they still did not match but were close enough.
+The TEU numbers reported by the USDOT (my baseline) did not match the numbers received by individual port authorities. I did some digging and initially believed certain totals included empty containers rather than just loaded import/export containers; however, after manually subtracting empty container numbers, they still did not match but were close enough.
