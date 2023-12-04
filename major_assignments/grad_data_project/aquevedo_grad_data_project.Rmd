@@ -67,6 +67,15 @@ US_ports_data_big_3 <- US_ports_data |>
   filter(trade_type == "TOTAL") |>
   select(clean_port_name, trade_type, reporting_year, volume)
 
+US_ports_data_big_3 |>
+  ggplot() +
+  geom_bar(aes(x=clean_port_name, weight=volume)) +
+  labs(
+    title="Annual Port TEU Volumes",
+    x = "Port",
+    y = "Total TEUs",
+    caption = "source: USDOT")
+
 ```
 
 
@@ -78,7 +87,16 @@ Note: The original dataset I downloaded from the Port of NY/NJ's site contained 
 
 ```{r}
 port_of_nynj_gg <- port_of_nynj |>
-  filter(category == "Total TEUs")
+  filter(category == "Total TEUs") |>
+
+#port_of_nynj_gg |>
+#  ggplot() +
+#  geom_bar(aes(x=clean_port_name, weight=volume)) +
+#  labs(
+#    title="Annual Port TEU Volumes",
+#    x = "Port",
+#    y = "Total TEUs",
+#    caption = "source: USDOT")
 
 ```
 
@@ -104,6 +122,19 @@ port_of_bmore_gg <- port_of_bmore |>
   mutate(month = my(month)) |>
   rename(date = month) |>
   mutate(year = format(as.Date(date), "%Y")) |>
-  select(year, total_loaded_te_us)
+  select(year, total_loaded_te_us) |>
+  filter(year == "2019" | year == "2020" | year == "2021" | year == "2022") |>
+  group_by(year) |>
+  summarise(sum_year = sum(total_loaded_te_us))
+
+port_of_bmore_gg |>
+  ggplot() +
+  geom_bar(aes(x=year, weight=sum_year)) +
+  labs(
+    title="Annual Port of Baltimore TEU Volumes",
+    x = "Year",
+    y = "Total TEUs",
+    caption = "source: Maryland Port Administration")
+
 ```
 
