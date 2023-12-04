@@ -159,7 +159,7 @@ port_of_bmore_gg |>
 
 ## Port Volume Comparisons
 
-Overall, Atlantic Coast ports saw a spike in imported and exported TEUs in 2021, likely partially as a result of Pacific Coast ports being overwhelmed as previously discussed and partially due to an increase in demand/consumerism. However, the volume declined in 2022 as the pandemic came to an unofficial end, driven mostly by the Port of Virginia. The Port of NY-NJ saw the sharpest pandemic-driven volume increase and was able to maintain the elevated volume. The Port of Baltimore's volume remained essentially flat but has been gradually increasing since the initial pandemic drop in 2020.
+Overall, Atlantic Coast ports saw a spike in imported and exported TEUs in 2021, likely partially as a result of Pacific Coast ports being overwhelmed as previously discussed and partially due to an increase in demand/consumerism. However, the volume declined in 2022 as the pandemic came to an unofficial end, driven mostly by the Port of Virginia. The Port of NY-NJ also saw pandemic-driven volume increase and was able to maintain the elevated volume. The Port of Baltimore's volume remained essentially flat but has been gradually increasing since the initial pandemic drop in 2020.
 
 ```{r}
 final_3_gg <- inner_join(port_of_bmore_gg, port_of_nynj_gg, by = "year") %>%
