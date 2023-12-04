@@ -176,7 +176,7 @@ ggplot() +
   labs(title = "Port Volumes Over Years",
        x = "Year",
        y = "Totals",
-       caption = "Source USDOT, NY-NJ Port Authority, Maryland Port Authority")
+       caption = "Source USDOT, Port Authority of New York and New Jersey, Maryland Port Administration, Port of Virginia")
   
   #coord_flip() 
   #geom_line(aes(x = year, y = VA, color = "Virginia")) +
