@@ -193,7 +193,9 @@ ggplot() +
 
 ## Potential Story Ideas
 
-Would require additional analysis, but I'd be curious to see what the general volume pattern at the Port of Baltimore has been - have we ever seen steep inclines/declines in port activity? Why is their volume such a small fraction of other ports in the area? With their freight volumes mostly flat while other east coast volumes increased during the pandemic, I also wonder what was the main driver in their exception to the pandemic trend. Non-MD related - I'm interested in what infrastructure is being/has been put in place at NY-NJ now that they are seeing a sustained increase in ocean freight (new container warehouses, increase in personnel, etc).
+MD-related: Would require additional analysis, but I'd be curious to see what the general volume pattern at the Port of Baltimore has been - have we ever seen steep inclines/declines in port activity? What brought those fluctuations about? Why is Baltimore's volume a fraction of what other ports in the area see annually? 
+Non-MD related: Now that I have an understanding of our local port and the two largest ports in the area, I'd like to analyze the remaining ports on the east coast (Philadelphia, Wilmington, Boston). Knowing they are also smaller than VA and NY-NJ, I wonder what might've been the main driver in their exception to the pandemic trend.
+Non-MD related: I'm interested in what infrastructure is being/has been put in place at NY-NJ now that they are seeing a sustained increase in ocean freight (new container warehouses, increase in personnel, etc) and what the increase has meant for the states/cities economically.
 
 **Known Errors in Data**
 
