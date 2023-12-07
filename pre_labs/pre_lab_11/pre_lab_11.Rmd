@@ -3,6 +3,9 @@ title: "pre_lab_11.Rmd"
 author: "derek willis"
 date: "2023-08-09"
 output: html_document
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 ```{r setup, include=FALSE}
@@ -11,13 +14,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # An intro to text analysis
 
-Throughout this course, we've been focused on finding information in structured data. We've learned a lot of techniques to do that, and we've learned how the creative mixing and matching of those skills can find new insights.
+Throughout this course, we've been focused on finding information in structured data.
+We've learned a lot of techniques to do that, and we've learned how the creative mixing and matching of those skills can find new insights.
 
-What happens when the insights are in unstructured data? Like a block of text?
+What happens when the insights are in unstructured data?
+Like a block of text?
 
 Turning unstructured text into data to analyze is a whole course in and of itself -- and one worth taking if you've got the credit hours -- but some simple stuff is in the grasp of basic data analysis.
 
-To do this, we'll need a new library -- [tidytext](https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html), which you can guess by the name plays very nicely with the tidyverse. So install it in the console with `install.packages("tidytext")` and we'll get rolling.
+To do this, we'll need a new library -- [tidytext](https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html), which you can guess by the name plays very nicely with the tidyverse.
+So install it in the console with `install.packages("tidytext")` and we'll get rolling.
 
 ### Task 1: Load libraries and settings
 
@@ -32,22 +38,27 @@ library(lubridate)
 library(rvest)
 ```
 
-Remember the end of the previous lab, where you scraped all of those press release links from Maryland Sen. Ben Cardin's website? We're going to take that one step further and analyze the actual text of those releases using tidytext. Our starting question: what words or phrases appear most in Cardin's press releases?
+Remember the end of the previous lab, where you scraped all of those press release links from Maryland Sen. Ben Cardin's website?
+We're going to take that one step further and analyze the actual text of those releases using tidytext.
+Our starting question: what words or phrases appear most in Cardin's press releases?
 
-To answer this question, we'll use the text of those releases. For the scraping lab we gathered the URLs of 999 of Cardin's press releases, and for this exercise we'll be working with the text of them.
+To answer this question, we'll use the text of those releases.
+For the scraping lab we gathered the URLs of 999 of Cardin's press releases, and for this exercise we'll be working with the text of them.
 
 Let's read in this data and examine it:
 
 ### Task 2: Read in data
 
-**Task** Run the following code and describe the dataframe it outputs. 
-**Answer**Dataframe contains 999 press releases from Sen. Cardin's office. The data is categorized by date, title, URL,  and text.
+**Task** Run the following code and describe the dataframe it outputs.
+**Answer**Dataframe contains 999 press releases from Sen. Cardin's office.
+The data is categorized by date, title, URL, and text.
 
 ```{r}
 releases <- read_rds("data/cardin_releases.rds")
 ```
 
-As an aside, below is an example of how you would scrape the text from the first 10 press releases. We already have the text in the dataframe, but this lets you know how it was collected.
+As an aside, below is an example of how you would scrape the text from the first 10 press releases.
+We already have the text in the dataframe, but this lets you know how it was collected.
 
 ### Task 3: Example of gathering text
 
@@ -76,7 +87,10 @@ for (u in urls){
 release_text
 ```
 
-What we want to do is to make the `text` column easier to analyze. Let's say we want to find out the most commonly used words. We'll want to remove URLs from the text of the releases since they aren't actual words. Let's use mutate to make that happen:
+What we want to do is to make the `text` column easier to analyze.
+Let's say we want to find out the most commonly used words.
+We'll want to remove URLs from the text of the releases since they aren't actual words.
+Let's use mutate to make that happen:
 
 ### Task 4: Remove URLs from content
 
@@ -91,19 +105,22 @@ If you are trying to create a list of unique words, R will treat differences in 
 
 ### Task 5: Trying out unique
 
-**Task** Run the following code and describe what the `unique` function does to the original list of words. 
-**Answer** 
+**Task** Run the following code and describe what the `unique` function does to the original list of words.
+**Answer** It eliminates repeat words and creates a list of unique words in a df. The function is case-sesnitive and requires standardization of data (lowercase vs uppercase).
 
 ```{r}
 a_list_of_words <- c("Dog", "dog", "dog", "cat", "cat", ",")
 unique(a_list_of_words)
 ```
 
-Fortunately, this is a solved problem with tidytext, which has a function called `unnest_tokens` that will convert the text to lowercase and remove all punctuation. The way that `unnest_tokens` works is that we tell it what we want to call the field we're creating with this breaking apart, then we tell it what we're breaking apart -- what field has all the text in it. For us, that's the `text` column:
+Fortunately, this is a solved problem with tidytext, which has a function called `unnest_tokens` that will convert the text to lowercase and remove all punctuation.
+The way that `unnest_tokens` works is that we tell it what we want to call the field we're creating with this breaking apart, then we tell it what we're breaking apart -- what field has all the text in it.
+For us, that's the `text` column:
 
 ### Task 6: Trying out unnest_tokens
 
-**Task** Run the following code and describe the output of using the `unnest_tokens` function. **Answer** A df containing a list of all words found in in press releases.
+**Task** Run the following code and describe the output of using the `unnest_tokens` function.
+**Answer** A df containing a list of all words found in press releases.
 
 ```{r}
 unique_words <- releases |> select(text) |>
@@ -113,9 +130,13 @@ View(unique_words)
 
 ### Task 7: Make a column chart
 
-**Task** Run the following code and describe what the resulting graphic shows. Is it interesting? **Answer** The graphic shows a chart ranking the most common words found in Cardin's press releases. Not very interesting a first - it's mostly made up of articles and pronouns.
+**Task** Run the following code and describe what the resulting graphic shows.
+Is it interesting?
+**Answer** The graphic shows a chart ranking the most common words found in Cardin's press releases.
+Not very interesting a first - it's mostly made up of articles and pronouns.
 
-Now we can look at the top words in this dataset. Let's limit ourselves to making a plot of the top 25 words, and we'll use the function `count` to do the counting:
+Now we can look at the top words in this dataset.
+Let's limit ourselves to making a plot of the top 25 words, and we'll use the function `count` to do the counting:
 
 ```{r}
 unique_words |>
@@ -131,7 +152,10 @@ unique_words |>
       title = "Count of unique words found in Cardin releases")
 ```
 
-Well, that's a bit underwhelming - a lot of very common (and short) words. This also is a solved problem in working with text data, and words like "a" and "the" are known as "stop words". In most cases you'll want to remove them from your analysis since they are so common. Tidytext provides a dataframe of them that we'll load, and then we'll add some of our own.
+Well, that's a bit underwhelming - a lot of very common (and short) words.
+This also is a solved problem in working with text data, and words like "a" and "the" are known as "stop words".
+In most cases you'll want to remove them from your analysis since they are so common.
+Tidytext provides a dataframe of them that we'll load, and then we'll add some of our own.
 
 ### Task 8: Load the stop words
 
@@ -157,14 +181,17 @@ stop_words <- stop_words |>
 
 ```
 
-Then we're going to use a function we haven't used yet called an `anti_join`, which filters out any matches. So we'll `anti_join` the stop words and get a list of words that aren't stop words.
+Then we're going to use a function we haven't used yet called an `anti_join`, which filters out any matches.
+So we'll `anti_join` the stop words and get a list of words that aren't stop words.
 
-From there, we can get a simple word frequency by just grouping them together and counting them. We can borrow the percent code from above to get a percent of the words our top 10 words represent.
+From there, we can get a simple word frequency by just grouping them together and counting them.
+We can borrow the percent code from above to get a percent of the words our top 10 words represent.
 
 ### Task 9: Using anti_join
 
-**Task** Run the following code and describe the results. Is it more interesting than before? 
-**Answer** Yes, the new list of words better represents the issues Cardin is most focused on as a  senator (health, Baltimore, communities, etc.).
+**Task** Run the following code and describe the results.
+Is it more interesting than before?
+**Answer** Yes, the new list of words better represents the issues Cardin is most focused on as a senator (health, Baltimore, communities, etc.).
 
 ```{r}
 unique_words |>
@@ -175,7 +202,9 @@ unique_words |>
   top_n(50)
 ```
 
-Those seem like more relevant unique words. Now, here's where we can start to do more interesting and meaningful analysis. Let's create three dataframes of unique words based on time: one for 2021, 2022 and 2023.
+Those seem like more relevant unique words.
+Now, here's where we can start to do more interesting and meaningful analysis.
+Let's create three dataframes of unique words based on time: one for 2021, 2022 and 2023.
 
 ### Task 10: Create dataframes for 2021, 2022 and 2023
 
@@ -202,8 +231,9 @@ Then we can create top 10 lists for both of them and compare:
 
 ### Task 11: Create dataframes with the top 10 words in each year
 
-**Task** Run the following code and describe the results. 
-**Answer** In line with national events at the time, 2021's most common words were focused around healthcare and covid-19.In 2022, the top words were focused around communities and rebuilding (funding, support) after the economic, educational, etc devestation the pandemic brought about. In 2023, the word women broke the top 5 despite not being present in the top 10 at all the previous two years. Fire was also a new keyword.
+**Task** Run the following code and describe the results.
+**Answer** In line with national events at the time, 2021's most common words were focused around healthcare and covid-19.In 2022, the top words were focused around communities and rebuilding (funding, support) after the economic, educational, etc devestation the pandemic brought about.
+In 2023, the word women broke the top 5 despite not being present in the top 10 at all the previous two years. Fire was also a new keyword.
 
 ```{r}
 unique_words_2021 |>
@@ -228,11 +258,16 @@ unique_words_2023 |>
   top_n(10)
 ```
 
-Useful, but only to a point. Single words only gets us so much.
+Useful, but only to a point.
+Single words only gets us so much.
 
 ## Going beyond a single word
 
-The next step in text analysis is using `ngrams`. An `ngram` is any combination of words that you specify. Two word ngrams are called bigrams (bi-grams). Three would be trigrams. And so forth.
+The next step in text analysis is using `ngrams`.
+An `ngram` is any combination of words that you specify.
+Two word ngrams are called bigrams (bi-grams).
+Three would be trigrams.
+And so forth.
 
 The code to make ngrams is similar to what we did above, but involves some more twists.
 
@@ -248,8 +283,8 @@ So this block is is going to do the following:
 
 ### Task 12: Create a dataframe with the top 10 two-word phrases for 2021
 
-**Task** Run the following code and describe the results. 
-**Answer** 
+**Task** Run the following code and describe the results.
+**Answer** Similar to the code above, the output contains the top 10 phrases found in Cardin's press releases in 2021. The output for this code is for two-word phrases as opposed to single-word phrases. Most are related to the covid-19 pandemic.
 
 ```{r}
 releases |>
@@ -265,11 +300,14 @@ releases |>
   top_n(10)
 ```
 
-And we already have a different, more nuanced result. Health was among the top single words, and we can see that "health care", "human rights" and "chesapeake bay" are among the top 2-word phrases. What about after 2021?
+And we already have a different, more nuanced result.
+Health was among the top single words, and we can see that "health care", "human rights" and "chesapeake bay" are among the top 2-word phrases.
+What about after 2021?
 
 ### Task 13: Create a dataframe with the top 10 two-word phrases for 2022
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results.
+**Answer** Covid-19 remained a popular issue for Cardin in 2022. Healthcare and projects in the Baltimore City area were also popular phrases.
 
 ```{r}
 releases |>
@@ -289,7 +327,8 @@ And 2023?
 
 ### Task 14: Create a dataframe with the top 10 two-word phrases for 2023
 
-**Task** Run the following code and describe the results. **Answer**
+**Task** Run the following code and describe the results.
+**Answer** The top results include phrases related to legislation and the environment (Chesapeake Bay, offshore wind).
 
 ```{r}
 releases |>
@@ -305,18 +344,26 @@ releases |>
   top_n(10)
 ```
 
-We can see that "covid 19" is no longer a top phrase, and phrases about human rights have taken the lead. "oral health" makes an appearance, too. You'll notice that the percentages are very small; that's not irrelevant but in some cases it's the differences in patterns that's more important.
+We can see that "covid 19" is no longer a top phrase, and phrases about human rights have taken the lead.
+"oral health" makes an appearance, too.
+You'll notice that the percentages are very small; that's not irrelevant but in some cases it's the differences in patterns that's more important.
 
-There are some potential challenges to doing an analysis. For one, there are variations of words that could probably be standardized - maybe using OpenRefine - that would give us cleaner results. There might be some words among our list of stop words that actually are meaningful in this context.
+There are some potential challenges to doing an analysis.
+For one, there are variations of words that could probably be standardized - maybe using OpenRefine - that would give us cleaner results.
+There might be some words among our list of stop words that actually are meaningful in this context.
 
 ## Sentiment Analysis
 
-Another popular use of text analysis is to measure the sentiment of a word - whether it expresses a positive or negative idea - and tidytext has built-in tools to make that possible. We use word counts like we've already calculated and bring in a dataframe of words (called a lexicon) along with their sentiments using a function called `get_sentiments`. The most common dataframe is called "bing" which has nothing to do with the Microsoft search engine. Let's load it:
+Another popular use of text analysis is to measure the sentiment of a word - whether it expresses a positive or negative idea - and tidytext has built-in tools to make that possible.
+We use word counts like we've already calculated and bring in a dataframe of words (called a lexicon) along with their sentiments using a function called `get_sentiments`.
+The most common dataframe is called "bing" which has nothing to do with the Microsoft search engine.
+Let's load it:
 
 ### Task 15: Load the bing lexicon and produce sentiments for our 2021-2023 unique words
 
-**Task** Run the following code and describe the results. Do any of the sentiments seem incorrect or counter-intuitive? 
-**Answer**
+**Task** Run the following code and describe the results.
+Do any of the sentiments seem incorrect or counter-intuitive?
+**Answer** Words like critical or urgent could have positive connotations (as a descriptor of necessities like aid, infrastructure, etc). Trump is also listed as a positive word, but if this is in reference to our former president, well...not so much.
 
 ```{r}
 bing <- get_sentiments("bing")
@@ -338,4 +385,6 @@ View(bing_word_counts_2022)
 View(bing_word_counts_2023)
 ```
 
-Gauging the sentiment of a word can be heavily dependent on the context, and as with other types of text analysis sometimes larger patterns are more meaningful than individual results. But the potential with text analysis is vast: knowing what words and phrases that public officials employ can be a way to evaluate their priorities, cohesiveness and tactics for persuading voters and their colleagues. And those words and phrases are data.
+Gauging the sentiment of a word can be heavily dependent on the context, and as with other types of text analysis sometimes larger patterns are more meaningful than individual results.
+But the potential with text analysis is vast: knowing what words and phrases that public officials employ can be a way to evaluate their priorities, cohesiveness and tactics for persuading voters and their colleagues.
+And those words and phrases are data.
